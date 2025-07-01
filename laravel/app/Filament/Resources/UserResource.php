@@ -6,9 +6,11 @@ use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -25,7 +27,38 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                //
+                SpatieMediaLibraryFileUpload::make('avatar')
+                ->collection('avatars')
+                ->label('Avatar')
+                ->image()
+                ->maxSize(1024) //1Mb
+                ->required()
+                ->columnSpanFull(),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->required()
+                    ->minLength(8)
+                    ->maxLength(255)
+                    ->dehydrateStateUsing(fn ($state) => bcrypt($state))
+                    ->visible(fn ($operation):bool => $operation == 'create'),
+                // Forms\Components\Toggle::make('email_verified_at')
+                //     ->label('Email Verified')
+                //     ->default(false),
+                // form select untuk memilih role
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->required(),
             ]);
     }
 
@@ -33,10 +66,22 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('avatar')
+                    ->collection('avatars')
+                    ->label('Avatar')
+                    ->conversion('thumb')
+                    ->circular()
+                    ->width(50)
+                    ->height(50),
                 Tables\Columns\TextColumn::make('name'),
                 Tables\Columns\TextColumn::make('email'),
                 Tables\Columns\TextColumn::make('email_verified_at'),
                 Tables\Columns\TextColumn::make('created_at'),
+                Tables\Columns\TextColumn::make('roles.name')
+            ->label('Role')
+            ->formatStateUsing(fn ($state, $record) => $record->getRoleNames()->join(', '))
+            ->sortable()
+            ->searchable(),
             ])
             ->filters([
                 //

@@ -7,10 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+use Spatie\Permission\Traits\HasRoles;
+use BezhanSalleh\FilamentShield\Traits\HasRoles as ShieldHasRoles;
+use Filament\AvatarProviders\UiAvatarsProvider;
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
+    use HasRoles;
+    use InteractsWithMedia;
+    use HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -44,5 +54,12 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->getMedia('avatars')->first()?->getUrl()
+                ?? $this->getMedia('avatar')?->first()?->getUrl('thumb')
+                 ?? (new UiAvatarsProvider())->get($this);
     }
 }
