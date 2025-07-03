@@ -59,7 +59,7 @@
         ],
         "post-install-cmd":[
             "@php artisan migrate --force",
-            "@php artisan shield:super-admin --user=1 --panel=admil",
+            "@php artisan shield:super-admin --user=1 --panel=admin",
             "@php artisan shield:generate --resource=RoleResource --panel=admin",
             "@php artisan filament:optimize-clear"
         ]
