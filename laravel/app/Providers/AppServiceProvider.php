@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Policies\postPolicy;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,5 +25,9 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Gate::policy(Post::class, PostPolicy::class);
+        if ($this->app->environment('production')) {
+            $this->app['request']->server->set('HTTPS', 'on');
+            URL::forceScheme('https');
+        }
     }
 }
