@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+// use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
-use App\Policies\postPolicy;
+use App\Policies\PostPolicy;
 use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,7 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         //
-        Gate::policy(Post::class, PostPolicy::class);
+        // Gate::policy(Post::class, PostPolicy::class);
         if ($this->app->environment('production')) {
             $this->app['request']->server->set('HTTPS', 'on');
             URL::forceScheme('https');
