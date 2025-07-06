@@ -3,18 +3,19 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-
-use Spatie\Permission\Traits\HasRoles;
-use BezhanSalleh\FilamentShield\Traits\HasRoles as ShieldHasRoles;
-use Filament\AvatarProviders\UiAvatarsProvider;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Permission\Traits\HasRoles;
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Filament\AvatarProviders\UiAvatarsProvider;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements FilamentUser, HasMedia, HasAvatar
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -55,11 +56,15 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
         ];
     }
-
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->getMedia('avatars')->first()?->getUrl()
-                ?? $this->getMedia('avatar')?->first()?->getUrl('thumb')
-                 ?? (new UiAvatarsProvider())->get($this);
+            ?? $this->getMedia('avatars')->first()?->getUrl('thumb')
+            ?? (new UiAvatarsProvider())->get($this);
+    }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return true;
     }
 }

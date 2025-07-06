@@ -23,7 +23,7 @@
             <a class="mr-5 hover:text-gray-900" href= "{{route('artikel')}}">Artikel</a>
             <a class="mr-5 hover:text-gray-900" href= "{{route('penulis')}}">Author</a>
             </nav>
-            <a href="http://localhost:8000/admin/" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Login
+            <a href="praktekfilapab-production.up.railway.app/admin/login" class="inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">Login
             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7"></path>
             </svg>
@@ -37,29 +37,21 @@
             <div class="lg:w-1/4 md:w-1/2 w-full px-4">
                 <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">CATEGORIES</h2>
                 <nav class="list-none mb-10">
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">Artikel</a>
-                </li>
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">berita</a>
-                </li>
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">Universitas</a>
-                </li>
+                    @foreach ($categories as $category)
+                        <li>
+                            <a class="text-gray-600 hover:text-gray-800">{{ $category->name }}</a>
+                        </li>
+                    @endforeach
                 </nav>
             </div>
             <div class="lg:w-1/4 md:w-1/2 w-full px-4">
-                <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">TEKS</h2>
+                <h2 class="title-font font-medium text-gray-900 tracking-widest text-sm mb-3">TAGS</h2>
                 <nav class="list-none mb-10">
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">Artikel</a>
-                </li>
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">berita</a>
-                </li>
-                <li>
-                    <a class="text-gray-600 hover:text-gray-800">Universitas</a>
-                </li>
+                    @foreach ($tags as $tag)
+                        <li>
+                            <a class="text-gray-600 hover:text-gray-800">{{ $tag->name }}</a>
+                        </li>
+                    @endforeach
                 </nav>
             </div>
             <div class="lg:w-1/4 md:w-1/2 w-full px-4">
